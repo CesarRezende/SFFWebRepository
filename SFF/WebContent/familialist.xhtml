@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+<ui:composition template="WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="header">
+		<h2 id="headertitle">Familia</h2>
+	</ui:define>
+	<ui:define name="content">
+
+		<div id="maincontent">
+			<form id="familiaform">
+				<c:if test="#{familiaList.usuario.administrator}">
+					<f:ajax event="click" render="@none" execute="@this"
+						listener="#{familiaList.insert}">
+						<h:commandButton id="insertButton" image="imagens/fa-plus.png" title="Adicionar"
+							class="grid_icon" />
+					</f:ajax>
+				</c:if>
+
+				<h:commandButton id="btnWebService" value="Teste Webservice"
+					style="display:none;">
+					<f:ajax render="@none" />
+				</h:commandButton>
+
+				<h:dataTable id="familiasGrid" value="#{familiaList.familias}"
+					class="display compact" var="item">
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="ID" />
+						</f:facet>
+						<h:outputText value="#{item.id}" />
+
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Familia" />
+						</f:facet>
+						<h:outputText value="#{item.descricao}" />
+
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Editar" />
+						</f:facet>
+						<f:ajax event="click" render="@none" execute="@this"
+							onevent="editFamilia" listener="#{familiaList.edit}">
+							<h:commandButton image="imagens/fa-pencil-square-o.png" title="Editar"
+								class="grid_icon edit_icon">
+								<f:param name="id" value="#{item.id}" />
+							</h:commandButton>
+							<h:inputHidden value="#{item.id}" />
+						</f:ajax>
+
+					</h:column>
+
+					<h:column>
+						<c:if test="#{familiaList.usuario.administrator}">
+							<f:facet name="header">
+								<h:outputText value="Apagar" />
+							</f:facet>
+							<f:ajax event="click" execute="@none">
+								<h:commandButton image="imagens/fa-eraser.png" class="grid_icon" title="Apagar"
+									onclick="excluirFamilia(#{item.id}, this)">
+									<f:param name="id" value="#{item.id}" />
+								</h:commandButton>
+							</f:ajax>
+						</c:if>
+					</h:column>
+
+				</h:dataTable>
+
+			</form>
+		</div>
+
+		<h:outputScript target="head" library="js" name="familialist.js" />
+		<h:outputScript target="head">		
+		function excluirFamilia(id, node){
+			if(confirm("Tem Ceteza que deseja apagar esse registro")){
+				
+				var soapMessage = createSoapMsg("removeFamilia", {id: id});
+    		
+		    	$.ajax({
+		
+		    		url: "webservices?wsdl",
+		    		
+		    		data: soapMessage,
+		    		
+		    		type: "POST",
+		    		
+		    		dataType : "xml",
+		
+		    		contentType: "text/xml; charset=\"utf-8\"",
+		    		
+		    		success: function( result ) {
+		    			var resultValue = $(result).find("return").get(0).innerHTML;
+		    			if(resultValue == "success"){
+			    			var id = $(".dataTable").get(0).id.replace(":", "\\:");
+							var table = $("#" + id).DataTable();
+							var row = table.row($(node).closest("tr"));
+							row.remove();
+							table.draw();
+						}else{
+							alert(resultValue);
+						}
+		    		},
+		    		// code to run if the request fails; the raw request and
+		    		// status codes are passed to the function
+		    		error: function( xhr, status, errorThrown ) {
+		    		alert( "Desculpe, houve um problema!" );
+		    		console.log( "Error: " + errorThrown );
+		    		console.log( "Status: " + status );
+		    		console.dir( xhr );
+		    		},
+		    		// code to run regardless of success or failure
+		    		complete: function( xhr, status ) {
+		    		
+		    		}
+		    		});
+
+			}
+		}
+		</h:outputScript>
+		<h:outputStylesheet>
+		.dataTables_wrapper{
+			margin-top: 30px;
+		}
+		</h:outputStylesheet>
+
+
+	</ui:define>
+
+
+
+	<ui:define name="footer">
+
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+<ui:composition template="WEB-INF/templates/maintemplate.xhtml">
+	<ui:define name="header">
+		<h2 id="headertitle">Entrada Fixa</h2>
+	</ui:define>
+	<ui:define name="content">
+
+		<div id="maincontent">
+			<form id="entradafixaform">
+					<f:ajax event="click" render="@none" execute="@this"
+						listener="#{entradaFixaList.insert}">
+						<h:commandButton id="insertButton" image="imagens/fa-plus.png"
+							title="Adicionar" class="grid_icon" />
+					</f:ajax>
+
+
+				<h:commandButton id="btnWebService" value="Teste Webservice"
+					style="display:none;">
+					<f:ajax render="@none" />
+				</h:commandButton>
+
+				<h:dataTable id="entradasFixasGrid"
+					value="#{entradaFixaList.entradasFixas}" class="display compact"
+					var="item">
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="ID" />
+						</f:facet>
+						<h:outputText value="#{item.id}" />
+						<f:facet name="footer">
+							<h:outputText value="ID" />
+						</f:facet>
+
+
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Entrada Fixa" />
+						</f:facet>
+						<h:outputText value="#{item.descricao}" />
+						<f:facet name="footer">
+							<h:outputText value="Entrada Fixa" />
+						</f:facet>
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Tipo Dia" />
+						</f:facet>
+						<h:outputText value="#{item.tipoDia}" />
+						<f:facet name="footer">
+							<h:outputText value="Tipo Dia" />
+						</f:facet>
+
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Dia" />
+						</f:facet>
+						<h:outputText value="#{item.valorDia}" />
+						<f:facet name="footer">
+							<h:outputText value="Dia" />
+						</f:facet>
+
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Ocorrencia" />
+						</f:facet>
+						<h:outputText value="#{item.ocorrencia}" />
+						<f:facet name="footer">
+							<h:outputText value="Ocorrencia" />
+						</f:facet>
+
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Valor" />
+						</f:facet>
+						<h:outputText value="#{item.valor}">
+							<f:convertNumber locale="pt_BR" minFractionDigits="2"
+								maxFractionDigits="2" />
+						</h:outputText>
+						<f:facet name="footer">
+							<h:outputText value="Valor" />
+						</f:facet>
+
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Ativado" />
+						</f:facet>
+						<h:outputText value="#{item.desativado? 'Não': 'Sim'}">
+						</h:outputText>
+						<f:facet name="footer">
+							<h:outputText value="Ativado" />
+						</f:facet>
+
+					</h:column>
+					
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Editar" />
+						</f:facet>
+						<f:ajax event="click" render="@none" execute="@this"
+							onevent="editEntradaFixa" listener="#{entradaFixaList.edit}">
+							<h:commandButton image="imagens/fa-pencil-square-o.png"
+								title="Editar" class="grid_icon edit_icon">
+								<f:param name="id" value="#{item.id}" />
+							</h:commandButton>
+							<h:inputHidden value="#{item.id}" />
+						</f:ajax>
+						<f:facet name="footer">
+							<h:outputText value="Editar" />
+						</f:facet>
+
+					</h:column>
+
+					<h:column>
+						<c:if test="#{entradaFixaList.usuario.administrator}">
+							<f:facet name="header">
+								<h:outputText value="Apagar" />
+							</f:facet>
+							<f:ajax event="click" execute="@none">
+								<h:commandButton image="imagens/fa-eraser.png" class="grid_icon"
+									title="Apagar" onclick="excluirEntradaFixa(#{item.id}, this)">
+									<f:param name="id" value="#{item.id}" />
+								</h:commandButton>
+							</f:ajax>
+						</c:if>
+						<f:facet name="footer">
+								<h:outputText value="Apagar" />
+							</f:facet>
+					</h:column>
+
+				</h:dataTable>
+
+			</form>
+		</div>
+
+		<h:outputScript target="head" library="js" name="entradafixalist.js" />
+		<h:outputScript target="head">		
+		function excluirEntradaFixa(id, node){
+			if(confirm("Tem Ceteza que deseja apagar esse registro")){
+				
+				var soapMessage = createSoapMsg("removeEntradaFixa", {id: id});
+    		
+		    	$.ajax({
+		
+		    		url: "webservices?wsdl",
+		    		
+		    		data: soapMessage,
+		    		
+		    		type: "POST",
+		    		
+		    		dataType : "xml",
+		
+		    		contentType: "text/xml; charset=\"utf-8\"",
+		    		
+		    		success: function( result ) {
+		    			var resultValue = $(result).find("return").get(0).innerHTML;
+		    			if(resultValue == "success"){
+			    			var id = $(".dataTable").get(0).id.replace(":", "\\:");
+							var table = $("#" + id).DataTable();
+							var row = table.row($(node).closest("tr"));
+							row.remove();
+							table.draw();
+						}else{
+							alert(resultValue);
+						}
+		    		},
+		    		// code to run if the request fails; the raw request and
+		    		// status codes are passed to the function
+		    		error: function( xhr, status, errorThrown ) {
+		    		alert( "Desculpe, houve um problema!" );
+		    		console.log( "Error: " + errorThrown );
+		    		console.log( "Status: " + status );
+		    		console.dir( xhr );
+		    		},
+		    		// code to run regardless of success or failure
+		    		complete: function( xhr, status ) {
+		    		
+		    		}
+		    		});
+
+			}
+		}
+		</h:outputScript>
+		<h:outputStylesheet>
+		.dataTables_wrapper{
+			margin-top: 30px;
+		}
+		</h:outputStylesheet>
+
+
+	</ui:define>
+
+
+
+	<ui:define name="footer">
+
+	</ui:define>
+</ui:composition>
+</html>

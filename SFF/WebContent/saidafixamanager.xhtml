@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+<ui:composition template="WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="header">
+		<h2 id="headertitle">Saida Fixa</h2>
+	</ui:define>
+	<ui:define name="content">
+
+		<div id="managercontent">
+			<h:panelGrid columns="1" class="managergrid">
+
+				<h:panelGroup>
+					<h:outputLabel value="ID:" for="txtID" class="managerlabel" />
+					<h:inputText id="txtID" value="#{saidaFixaManager.saidaFixa.id}"
+						class="ui-autocomplete-input" style="width:40px;margin-right:20px;">
+					</h:inputText>
+					<h:outputLabel value="Data Lançamento: " for="txtDataLancamento" 
+						class="managerlabel" />
+					<h:inputText id="txtDataLancamento" disabled="true" 
+						value="#{saidaFixaManager.saidaFixa.dataLancamento}"
+						style="width:70px">
+						<f:converter converterId="javax.faces.DateTime" />
+					</h:inputText>
+					
+					<h:selectBooleanCheckbox id="chkDesativado"
+						value="#{saidaFixaManager.saidaFixa.desativado}" 
+						disabled="true"
+						style="margin-left:47px;"/>
+					<h:outputLabel value="Desativado" for="chkDesativado"
+						class="managerlabel" />
+						
+				</h:panelGroup>
+
+				<h:panelGroup id="diaGroup">
+					<h:outputLabel value="Tipo Dia: " for="ddlTipoDia"
+						class="managerlabel" />
+					<h:selectOneMenu id="ddlTipoDia"
+						value="#{saidaFixaManager.selectedTipoDia}"
+						style="margin-right:20px;">
+						<f:selectItems value="#{saidaFixaManager.tiposDia}" var="tipoDia" 
+							itemValue="#{tipoDia}" itemLabel="#{tipoDia.label}"  />
+						<f:ajax event="change" execute="@this" render="diaGroup" listener="#{saidaFixaManager.onTipoDiaChange}"/>
+					</h:selectOneMenu>
+					<h:outputLabel value="Dia: " for="txtDia" class="managerlabel"
+						rendered="#{saidaFixaManager.selectedTipoDia.label != 'Dia Semana'}" />
+					<h:inputText id="txtDia" required="true"
+						rendered="#{saidaFixaManager.selectedTipoDia.label != 'Dia Semana'}" 
+						class="ui-autocomplete-input date integerfield"
+						requiredMessage="* O campo 'Dia' é obrigatório"
+						value="#{saidaFixaManager.saidaFixa.valorDia}"
+						validatorMessage="* O campo 'Dia' deve ser estar entre os valores de 1 a 31"
+						style="margin-right:20px;width:76px;"
+						maxlength="2">
+
+						<f:convertNumber locale="pt_BR" maxFractionDigits="2"
+							minFractionDigits="0" />
+						<f:validateDoubleRange minimum="1" maximum="31" />
+					</h:inputText>
+
+					<h:outputLabel value="Dia: " for="ddlDia" class="managerlabel"
+						rendered="#{saidaFixaManager.selectedTipoDia.label == 'Dia Semana'}" />
+					<h:selectOneMenu id="ddlDia"
+						value="#{saidaFixaManager.saidaFixa.valorDia}"
+						rendered="#{saidaFixaManager.selectedTipoDia.label == 'Dia Semana'}"
+						style="margin-right:20px;">
+						<f:selectItem itemLabel="Segunda" itemValue="2" />
+						<f:selectItem itemLabel="Terça" itemValue="3" />
+						<f:selectItem itemLabel="Quarta" itemValue="4" />
+						<f:selectItem itemLabel="Quinta" itemValue="5" />
+						<f:selectItem itemLabel="Sexta" itemValue="6" />
+						<f:selectItem itemLabel="Sabado" itemValue="7" />
+						<f:selectItem itemLabel="Domingo" itemValue="1" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="Ocorrencia: " for="ddlOcorrencia"
+						class="managerlabel" />
+					<h:selectOneMenu id="ddlOcorrencia"
+						value="#{saidaFixaManager.saidaFixa.ocorrencia}"
+						disabled="#{saidaFixaManager.selectedTipoDia.label != 'Dia Semana'}">
+						<f:selectItem itemLabel="Nenhum" itemValue="0" itemDisabled="#{saidaFixaManager.selectedTipoDia.label == 'Dia Semana'}"/>
+						<f:selectItem itemLabel="Todas" itemValue="9" />
+						<f:selectItem itemLabel="1º Ocorrencia" itemValue="1"  />
+						<f:selectItem itemLabel="2º Ocorrencia" itemValue="2" />
+						<f:selectItem itemLabel="3º Ocorrencia" itemValue="3" />
+						<f:selectItem itemLabel="4º Ocorrencia" itemValue="4" />
+						<f:selectItem itemLabel="5º Ocorrencia" itemValue="5" />
+					</h:selectOneMenu>
+
+				</h:panelGroup>
+
+				<h:panelGroup>
+				<h:outputLabel value="Meses das saídas:"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+				
+				</h:panelGroup>
+				
+				<h:panelGroup>
+					<h:selectBooleanCheckbox id="chkJan"  value="#{saidaFixaManager.saidaFixa.jan}" style="margin-left:20px;"/>
+					<h:outputLabel value="Jan" for="chkJan"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+							
+					<h:selectBooleanCheckbox id="chkFev"  value="#{saidaFixaManager.saidaFixa.fev}"/>
+					<h:outputLabel value="Fev" for="chkFev"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+							
+					<h:selectBooleanCheckbox id="chkMar"  value="#{saidaFixaManager.saidaFixa.mar}" />
+					<h:outputLabel value="Mar" for="chkMar"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+					
+					<h:selectBooleanCheckbox id="chkAbr"  value="#{saidaFixaManager.saidaFixa.abr}"/>
+					<h:outputLabel value="Abr" for="chkAbr"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+							
+					<h:selectBooleanCheckbox id="chkMai"  value="#{saidaFixaManager.saidaFixa.mai}"/>
+					<h:outputLabel value="Mai" for="chkMai"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+							
+					<h:selectBooleanCheckbox id="chkJun"  value="#{saidaFixaManager.saidaFixa.jun}"/>
+					<h:outputLabel value="Jun" for="chkJun"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+							
+				</h:panelGroup>
+				
+				<h:panelGroup>
+					<h:selectBooleanCheckbox id="chkJul"  value="#{saidaFixaManager.saidaFixa.jul}" style="margin-left:20px;"/>
+					<h:outputLabel value="Jul" for="chkJul"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+							
+					<h:selectBooleanCheckbox id="chkAgo"  value="#{saidaFixaManager.saidaFixa.ago}"/>
+					<h:outputLabel value="Ago" for="chkAgo"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+							
+					<h:selectBooleanCheckbox id="chkSet"  value="#{saidaFixaManager.saidaFixa.set}"/>
+					<h:outputLabel value="Set" for="chkSet"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+					
+					<h:selectBooleanCheckbox id="chkOut"  value="#{saidaFixaManager.saidaFixa.out}"/>
+					<h:outputLabel value="Out" for="chkOut"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+							
+					<h:selectBooleanCheckbox id="chkNov"  value="#{saidaFixaManager.saidaFixa.nov}"/>
+					<h:outputLabel value="Nov" for="chkNov"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+							
+					<h:selectBooleanCheckbox id="chkDez"  value="#{saidaFixaManager.saidaFixa.dez}"/>
+					<h:outputLabel value="Dez" for="chkDez"
+							class="managerlabel" 
+							style="margin-right:20px;"/>
+							
+				</h:panelGroup>
+
+				<h:panelGroup>
+				<h:outputLabel value="Valor: " for="txtValor" class="managerlabel" />
+					<h:inputText id="txtValor" required="true" 
+						class="ui-autocomplete-input date valuefield"
+						requiredMessage="* O campo 'Valor' é obrigatório"
+						value="#{saidaFixaManager.saidaFixa.valor}"
+						validatorMessage="* O campo 'Valor' deve se superior a zero" 
+						style="width:100px;">
+						
+						<f:convertNumber locale="pt_BR" maxFractionDigits="2"
+							minFractionDigits="2" />
+							<f:validateDoubleRange minimum="0.01"/>
+					</h:inputText>
+					
+				<h:outputLabel value="Tipo Gasto: " for="ddlTipoGasto"
+						class="managerlabel" />
+				<h:selectOneMenu  
+					disabled="false"
+					style="width:145px;"
+						value="#{saidaFixaManager.selectTipoGastoId}"
+						id="ddlTipoGasto">
+						<f:selectItems 
+						    value="#{saidaFixaManager.tiposGasto}"
+							var="tg"
+							itemValue="#{tg.id}"
+							itemLabel="#{tg.descricao}" />
+
+					</h:selectOneMenu>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="Descrição: " for="txtSaidaFixa"
+						class="managerlabel" />
+					<h:inputText id="txtSaidaFixa" required="true"
+						class="ui-autocomplete-input"
+						requiredMessage="* O campo 'Saida Fixa' é obrigatório"
+						value="#{saidaFixaManager.saidaFixa.descricao}"
+						style="width:390px">
+					</h:inputText>
+				</h:panelGroup>
+				
+				
+
+				<h:panelGroup>
+					<h:commandButton value="Salvar" id="btnSave" disabled="#{saidaFixaManager.saidaFixa.desativado}"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+						<f:ajax event="click" execute="@form" render="@form"
+							listener="#{saidaFixaManager.saveSaidaFixa}"
+							onevent="validateSaidaFixaManager" />
+					</h:commandButton>
+
+				
+					<h:commandButton value="Cancelar" id="btnCancel"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+						<f:ajax event="click" render="@none" />
+					</h:commandButton>
+					
+					<h:commandButton 
+						rendered="#{!saidaFixaManager.saidaFixa.newRecord}"
+						value="#{saidaFixaManager.saidaFixa.desativado?'Reativar':'Desativar'}" id="btnDesable"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+						<f:ajax event="click" render="@none" 
+						listener="#{saidaFixaManager.disableSaidaFixa}" 
+						onevent="validateSaidaFixaManager"/>
+					</h:commandButton>
+					
+				</h:panelGroup>
+				
+
+				<h:messages class="error_message" />
+
+
+				<h:outputScript>loadJQuerySaidaFixaManager();</h:outputScript>
+
+			</h:panelGrid>
+		</div>
+
+		<h:outputScript target="head" library="js" name="saidafixamanager.js" />
+		<h:outputStylesheet>
+
+		</h:outputStylesheet>
+
+
+	</ui:define>
+
+
+
+	<ui:define name="footer">
+
+	</ui:define>
+</ui:composition>
+</html>

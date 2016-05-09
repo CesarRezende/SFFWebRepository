@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+
+<ui:composition template="WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="header">
+		<h2 id="headertitle">Tipo de Gasto</h2>
+	</ui:define>
+	<ui:define name="content">
+
+		<div id="managercontent">
+			<h:panelGrid columns="1" class="managergrid">
+
+				<h:panelGroup>
+					<h:outputLabel value="ID:" for="txtID" class="managerlabel" />
+					<h:inputText id="txtID" value="#{tipoGastoManager.tipoGasto.id}"
+						class="ui-autocomplete-input" style="width:40px;">
+					</h:inputText>
+
+					<h:outputLabel value="Tipo de Gasto:" for="txtTipoGasto"
+						class="managerlabel" />
+					<h:inputText id="txtTipoGasto" required="true"
+						class="ui-autocomplete-input"
+						requiredMessage="* O campo 'Tipo de Gasto' é obrigatório"
+						value="#{tipoGastoManager.tipoGasto.descricao}">
+					</h:inputText>
+					
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<h:selectBooleanCheckbox id="chkDesativado"
+						value="#{tipoGastoManager.tipoGasto.desativado}" />
+					<h:outputLabel value="Desativado" for="chkDesativado"
+						class="managerlabel" />
+				<h:message for="txtTipoGasto" class="error_message" />
+				</h:panelGroup>
+				
+
+				<h:panelGroup>
+					<h:commandButton value="Salvar" id="btnSave"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+						<f:ajax event="click" execute="@form" render="@form"
+							listener="#{tipoGastoManager.saveTipoGasto}"
+							onevent="validateTipoGastoManager" />
+					</h:commandButton>
+
+					<h:commandButton value="Cancelar" id="btnCancel"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+						<f:ajax event="click" render="@none" />
+					</h:commandButton>
+				</h:panelGroup>
+
+				<h:message for="txtTipoGasto" class="error_message" />
+
+
+				<h:outputScript>loadJQueryTipoGastoManager();</h:outputScript>
+
+			</h:panelGrid>
+		</div>
+
+		<h:outputScript target="head" library="js" name="tipogastomanager.js" />
+		<h:outputStylesheet>
+
+		</h:outputStylesheet>
+
+
+	</ui:define>
+
+
+
+	<ui:define name="footer">
+
+	</ui:define>
+</ui:composition>
+</html>

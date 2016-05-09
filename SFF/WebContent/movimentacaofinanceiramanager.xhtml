@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+
+<ui:composition template="WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="header">
+		<h2 id="headertitle">Movimentacao Financeira</h2>
+	</ui:define>
+	<ui:define name="content">
+
+		<div id="managercontent">
+			<h:panelGrid columns="1" class="managergrid">
+
+				<h:panelGroup>
+					<h:outputLabel value="ID: " for="txtID" class="managerlabel" />
+					<h:inputText id="txtID"
+						value="#{movimentacaoFinanceiraManager.movimentacaoFinanceira.id}"
+						class="ui-autocomplete-input" style="width:40px;">
+					</h:inputText>
+ 
+					<h:outputLabel value="Data Prevista: " for="txtDataPrevista"
+						class="managerlabel" />
+					<h:inputText id="txtDataPrevista"  class="datefield" required="true" 
+						requiredMessage="* O campo 'Data Prevista' é obrigatório"
+						disabled="#{!movimentacaoFinanceiraManager.movimentacaoFinanceira.manual}"
+						value="#{movimentacaoFinanceiraManager.movimentacaoFinanceira.dataPrevista}">
+						<f:converter converterId="javax.faces.DateTime" />
+					</h:inputText>
+
+					<h:outputLabel value="Data Realizada: " for="txtDataRealizada"
+					class="managerlabel" />
+					<h:inputText id="txtDataRealizada" 
+						class="datefield" binding="#{movimentacaoFinanceiraManager.txtDataRealizada}"
+						requiredMessage="* O campo 'Data Realizada' é obrigatório"
+						validatorMessage="Data Realizada não pode ser superior a data do dia."
+						value="#{movimentacaoFinanceiraManager.movimentacaoFinanceira.dataRealizada}">
+						<f:converter converterId="javax.faces.DateTime" />
+						<f:validator validatorId="notFutureDateValidator" />
+					</h:inputText>
+
+					<h:outputLabel value="Data Lançamento: " for="txtDataLancamento" 
+						class="managerlabel" />
+					<h:inputText id="txtDataLancamento" style="width:70px"
+						value="#{movimentacaoFinanceiraManager.movimentacaoFinanceira.dataLancamento}">
+						<f:converter converterId="javax.faces.DateTime" />
+					</h:inputText>
+					
+				</h:panelGroup>
+
+
+				<h:panelGroup>
+					<h:panelGrid columns="5" class="radiobuttongrid">
+						<h:outputLabel value="Tipo de Movimento: " for="optTipoMovimentacao"
+							class="managerlabel" />
+						<h:selectOneRadio id="optTipoMovimentacao" layout="lineDirection" 
+							value="#{movimentacaoFinanceiraManager.movimentacaoFinanceira.tipoMovimentacao}"
+							disabled="#{!movimentacaoFinanceiraManager.movimentacaoFinanceira.manual}">
+							<f:selectItem itemValue="C" itemLabel="Crédito" />
+							<f:selectItem itemValue="D" itemLabel="Debito" />
+							<f:ajax  execute="@this" render="txtTipoGasto"
+							listener="#{movimentacaoFinanceiraManager.enableTipoGastoField}">
+							</f:ajax>
+						</h:selectOneRadio>
+						<h:outputLabel style="width:200px;" />
+
+						<h:outputLabel value="Situação: " for="optSituacao"
+							class="managerlabel" />
+							
+						<h:selectOneRadio id="optSituacao" layout="lineDirection" class="optSituacao" 
+							value="#{movimentacaoFinanceiraManager.movimentacaoFinanceira.situacao}">
+							<f:selectItem itemValue="P" itemLabel="Previsto" />
+							<f:selectItem itemValue="R" itemLabel="Realizado" />
+							<f:ajax  execute="@this" render="txtDataRealizada"
+							listener="#{movimentacaoFinanceiraManager.requireDataRealizada}">
+							</f:ajax>
+						</h:selectOneRadio>
+						
+					</h:panelGrid>
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<h:outputLabel value="Valor: " for="txtValor" class="managerlabel" />
+					<h:inputText id="txtValor" required="true" 
+						class="ui-autocomplete-input date valuefield"
+						requiredMessage="* O campo 'Valor' é obrigatório"
+						value="#{movimentacaoFinanceiraManager.movimentacaoFinanceira.valor}"
+						validatorMessage="* O campo 'Valor' deve se superior a zero" >
+						
+						<f:convertNumber locale="pt_BR" maxFractionDigits="2"
+							minFractionDigits="2" />
+							<f:validateDoubleRange minimum="0.01"/>
+					</h:inputText>
+
+					<h:outputLabel value="Multa " for="txtMulta" class="managerlabel" />
+					<h:inputText id="txtMulta" class="ui-autocomplete-input valuefield"
+						value="#{movimentacaoFinanceiraManager.movimentacaoFinanceira.multa}">
+						<f:validateDoubleRange for="txtDesconto" minimum="0" />
+						<f:convertNumber locale="pt_BR" maxFractionDigits="2"
+							minFractionDigits="2" />
+					</h:inputText>
+
+					<h:outputLabel value="Juros: " for="txtJuros" class="managerlabel" />
+					<h:inputText id="txtJuros" class="ui-autocomplete-input valuefield"
+						value="#{movimentacaoFinanceiraManager.movimentacaoFinanceira.juros}">
+						<f:validateDoubleRange for="txtJuros" minimum="0" />
+						<f:convertNumber locale="pt_BR" maxFractionDigits="2"
+							minFractionDigits="2" />
+					</h:inputText>
+
+					<h:outputLabel value="Desconto: " for="txtDesconto"
+						class="managerlabel" />
+					<h:inputText id="txtDesconto"
+						class="ui-autocomplete-input valuefield"
+						value="#{movimentacaoFinanceiraManager.movimentacaoFinanceira.desconto}">
+						<f:validateDoubleRange for="txtDesconto" minimum="0" />
+						<f:convertNumber locale="pt_BR" maxFractionDigits="2"
+							minFractionDigits="2" />
+					</h:inputText>
+					<h:selectBooleanCheckbox id="chkManual"
+						value="#{movimentacaoFinanceiraManager.movimentacaoFinanceira.manual}" 
+						disabled="true"
+						style="margin-left:34px;"/>
+					<h:outputLabel value="Manual" for="chkManual"
+						class="managerlabel" />
+						
+				</h:panelGroup>
+
+
+				<h:panelGroup>
+					<h:outputLabel value="Descrição: " for="txtDescricao"
+						class="managerlabel" />
+					<h:inputText id="txtDescricao" required="true"
+						class="ui-autocomplete-input" style="width:352px;"
+						disabled="#{!movimentacaoFinanceiraManager.movimentacaoFinanceira.manual}"
+						requiredMessage="* O campo 'Descrição' é obrigatório"
+						validatorMessage="O campo 'Descrição' deve conter de 3 a 30 caracteres"
+						value="#{movimentacaoFinanceiraManager.movimentacaoFinanceira.descricao}">
+						<f:validateLength minimum="3" maximum="60" />
+					</h:inputText>
+
+					<h:outputLabel value="Tipo Gasto: " for="txtTipoGasto"
+						class="managerlabel" />
+					<h:selectOneMenu  
+					disabled="false"
+					style="width:145px;"
+						value="#{movimentacaoFinanceiraManager.selectTipoGastoId}"
+						binding="#{movimentacaoFinanceiraManager.txtTipoGasto}"
+						id="txtTipoGasto">
+						<f:selectItems 
+						    value="#{movimentacaoFinanceiraManager.tiposGasto}"
+							var="tg"
+							itemDisabled="#{tg.desativado}"
+							itemValue="#{tg.id}"
+							itemLabel="#{tg.descricao}" />
+
+					</h:selectOneMenu>
+				</h:panelGroup>
+
+
+				<h:panelGroup>
+					<h:commandButton value="Salvar" id="btnSave"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+						<f:ajax event="click" execute="@form" render="@form"
+							listener="#{movimentacaoFinanceiraManager.saveMovimentacaoFinanceira}"
+							onevent="validateMovimentacaoFinanceiraManager" />
+					</h:commandButton>
+
+					<h:commandButton value="Cancelar" id="btnCancel"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+						<f:ajax event="click" render="@none" />
+					</h:commandButton>
+				</h:panelGroup>
+
+				<h:messages class="error_message" />
+
+
+				<h:outputScript>loadJQueryMovimentacaoFinanceira();</h:outputScript>
+
+			</h:panelGrid>
+		</div>
+
+		<h:outputScript target="head" library="js"
+			name="movimentacaofinanceiramanager.js" />
+		<h:outputStylesheet>
+			.radiobuttongrid>tbody>tr>td{
+				padding-right:50px;
+			}
+		</h:outputStylesheet>
+
+
+	</ui:define>
+
+
+
+	<ui:define name="footer">
+
+	</ui:define>
+</ui:composition>
+</html>

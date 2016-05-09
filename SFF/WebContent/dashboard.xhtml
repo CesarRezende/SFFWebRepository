@@ -1,0 +1,292 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+
+<ui:composition template="WEB-INF/templates/dashboardtemplate.xhtml">
+	<ui:define name="header">
+		<h2 id="headertitle">Dashboard</h2>
+	</ui:define>
+	<ui:define name="content">
+
+		<h:outputScript target="head">
+	// Load the Visualization API and the piechart package.
+    google.load('visualization', '1.0', {'packages':['corechart']});
+	</h:outputScript>
+
+
+		<div id="maincontent">
+			<div id="yearMonthDiv" style="float: right;">
+				<h:outputLabel for="txtYearMonth" class="managerlabel"> Mês/Ano: </h:outputLabel>
+
+				<h:inputText id="txtYearMonth" value="#{dashboardBean.yearMonth}"
+					binding="#{dashboardBean.txtYearMonth}"
+					onkeypress="cancelKeyPressEvent(event)" style="width:60px;">
+
+				</h:inputText>
+				<h:commandButton id="btnYearMonth" style="display:none">
+					<f:ajax execute="txtYearMonth" onevent="changeYearMonth"
+						listener="#{dashboardBean.changeYearMonth}" render="@this" />
+				</h:commandButton>
+			</div>
+
+			<div id="charts_div" style="float: left; width: 840px;">
+				<div id="periodeChart_div"	style="width: 900px; height: 500px; float: left;"></div>
+				<div id="tipoGastoPeriodeChart_div"	style="width: 900px; height: 800px; float: left;"></div>
+				<div id="tipoGastoChart_div" style="float: left;"></div>
+				<div id="spendingsChart_div" style="float: left;"></div>
+				<div id="currentSpendingsChart_div" style="float: left;"></div>
+			</div>
+			<h:outputScript target="head" library="js" name="dashboard.js" />
+			<h:outputScript id="startscript" type="text/javascript">
+			
+			function defineMenuSize(){
+				$("#menu_multilevelpushmenu").height($("#charts_div").height()+2);
+			}
+			$(document).ready(function(){
+
+			    setTimeout(defineMenuSize, 500);
+  
+				$('#mainform\\:txtYearMonth').datepicker( {
+			    changeMonth: true,
+			    changeYear: true,
+			    showButtonPanel: true,
+			    dateFormat: 'mm/yy',
+			    onClose: function(dateText, inst) { 
+					        var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+					        var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+					        $(this).datepicker('setDate', new Date(year, month, 1));
+					        
+					        $("#mainform\\:btnYearMonth").click();
+						    }
+				});
+				
+				//Oculta Componente de Busca Padão do TabaTable
+		    	$('.dataTables_filter').css("display", "none");
+		    	
+		    	renderCharts();
+		    	
+			});
+			
+			 
+				function renderCharts(){
+				
+				  //Grafico de Tipo de Grafico
+			      
+			      // Set a callback to run when the Google Visualization API is loaded.
+			      google.setOnLoadCallback(drawTipoGastoChart);
+			
+			      // Callback that creates and populates a data table,
+			      // instantiates the pie chart, passes in the data and
+			      // draws it.
+			      function drawTipoGastoChart() {
+			
+					var graph = '#{dashboardBean.tipoGastoChart.data}';
+			        // Create the data table.
+			        var data = new google.visualization.DataTable();
+			        data.addColumn('string', 'Topping');
+			        data.addColumn('number', 'Slices');
+			        data.addRows(eval(graph));
+			
+			        // Set chart options
+			        var options = {'title':'#{dashboardBean.tipoGastoChart.title}',
+			                       'width':400,
+			                       'height':300};
+			
+			        // Instantiate and draw our chart, passing in some options.
+			        var chart = new google.visualization.PieChart(document.getElementById('tipoGastoChart_div'));
+			        chart.draw(data, options);
+			      }
+				
+				
+					//Grafico de Crédito Restante
+				
+			
+			      // Set a callback to run when the Google Visualization API is loaded.
+			      google.setOnLoadCallback(drawSpendingsChart);
+			
+			      // Callback that creates and populates a data table,
+			      // instantiates the pie chart, passes in the data and
+			      // draws it.
+			      function drawSpendingsChart() {
+			
+					var graph = '#{dashboardBean.spendingsChart.data}';
+			        // Create the data table.
+			        var data = new google.visualization.DataTable();
+			        data.addColumn('string', 'Topping');
+			        data.addColumn('number', 'Slices');
+			        data.addRows(eval(graph));
+			
+			        // Set chart options
+			        var options = {'title':'#{dashboardBean.spendingsChart.title}',
+			                       'width':400,
+			                       'height':300,
+			                       slices: #{dashboardBean.spendingsChart.slices}};
+			
+			        // Instantiate and draw our chart, passing in some options.
+			        var spendingsChart = new google.visualization.PieChart(document.getElementById('spendingsChart_div'));
+			        google.visualization.events.addListener(spendingsChart, 'ready', function(e){
+				        
+
+				        $($("#spendingsChart_div").find("text")).each(function(index, value){
+                          
+                          if(value.innerHTML == "Ganhos"){
+                          	value.innerHTML = "Ganhos - R$ "+ DefaultCurrencyToRealFormat(#{dashboardBean.spendingsChartGains});
+                          }
+                          if(value.innerHTML == "Gastos"){
+                          	value.innerHTML = "Gastos - R$ "+DefaultCurrencyToRealFormat(#{dashboardBean.spendingsChartSpends});
+                          }
+                          if(value.innerHTML.substring(0, 7) == "Endivid"){
+                          	value.innerHTML = "Endivid. - R$ "+DefaultCurrencyToRealFormat(#{dashboardBean.spendingsChartSpends});
+                          }
+                          
+                         });
+				        
+				      });
+				      
+			        spendingsChart.draw(data, options); 
+			        
+			        
+			      }
+			      
+			      //Grafico de Crédito Realizado Restante
+				
+			
+			      // Set a callback to run when the Google Visualization API is loaded.
+			      google.setOnLoadCallback(drawCurrentSpendingsChart);
+			
+			      // Callback that creates and populates a data table,
+			      // instantiates the pie chart, passes in the data and
+			      // draws it.
+			      function drawCurrentSpendingsChart() {
+			
+					var graph = '#{dashboardBean.currentSpendingsChart.data}';
+			        // Create the data table.
+			        var data = new google.visualization.DataTable();
+			        data.addColumn('string', 'Topping');
+			        data.addColumn('number', 'Slices');
+			        data.addRows(eval(graph));
+			
+			        // Set chart options
+			        var options = {'title':'#{dashboardBean.currentSpendingsChart.title}',
+			                       'width':400,
+			                       'height':300,
+			                       slices: #{dashboardBean.currentSpendingsChart.slices}};
+			
+			        // Instantiate and draw our chart, passing in some options.
+			        var currentSpendingsChart = new google.visualization.PieChart(document.getElementById('currentSpendingsChart_div'));
+			        google.visualization.events.addListener(currentSpendingsChart, 'ready', function(e){
+				        
+
+				        $($("#currentSpendingsChart_div").find("text")).each(function(index, value){
+                          
+                          if(value.innerHTML == "Ganhos"){
+                          	value.innerHTML = "Ganhos - R$ "+ DefaultCurrencyToRealFormat(#{dashboardBean.currentSpendingsChartGains});
+                          }
+                          if(value.innerHTML == "Gastos"){
+                          	value.innerHTML = "Gastos - R$ "+DefaultCurrencyToRealFormat(#{dashboardBean.currentSpendingsChartSpends});
+                          }
+                          if(value.innerHTML.substring(0, 7) == "Endivid"){
+                          	value.innerHTML = "Endivid. - R$ "+DefaultCurrencyToRealFormat(#{dashboardBean.currentSpendingsChartSpends});
+                          }
+                         });
+				        
+				      });
+			        currentSpendingsChart.draw(data, options);
+			      }
+			      
+			      //Grafico de Evolução de Ganhos e Gastos
+				
+			
+			      // Set a callback to run when the Google Visualization API is loaded.
+			      google.setOnLoadCallback(drawPeriodeChart);
+			
+			      // Callback that creates and populates a data table,
+			      // instantiates the pie chart, passes in the data and
+			      // draws it.
+			      function drawPeriodeChart() {
+			
+					
+			        // Create the data table.
+			        var data = google.visualization.arrayToDataTable(#{dashboardBean.periodeChart.data});
+			
+			        // Set chart options
+			        var options = {'title':'#{dashboardBean.periodeChart.title}',
+			                       hAxis: {title: 'Mês',  titleTextStyle: {color: '#333'}},
+          						   vAxis: {minValue: 0},
+          						   legend: {position: 'top'},
+			                       };
+			
+			        // Instantiate and draw our chart, passing in some options.
+			        var periodeChart = new google.visualization.AreaChart(document.getElementById('periodeChart_div'));
+			        
+			        periodeChart.draw(data, options);
+			      }
+				
+				
+				//Grafico de Evolução de Tipo de Gasto
+				
+			
+			      // Set a callback to run when the Google Visualization API is loaded.
+			      google.setOnLoadCallback(drawTipoGastoPeriodeChart);
+			
+			      // Callback that creates and populates a data table,
+			      // instantiates the pie chart, passes in the data and
+			      // draws it.
+			      function drawTipoGastoPeriodeChart() {
+			
+					
+			        // Create the data table.
+			        var data = google.visualization.arrayToDataTable(#{dashboardBean.tipoGastoPeriodeChart.data});
+			
+			        // Set chart options
+			        var options = {'title':'#{dashboardBean.tipoGastoPeriodeChart.title}',
+			                       hAxis: {title: 'Mês',  titleTextStyle: {color: '#333'}},
+          						   vAxis: {minValue: 0},
+          						   legend: {position: 'top'},
+			                       };
+			
+			        // Instantiate and draw our chart, passing in some options.
+			        var tipoGastoPeriodeChart = new google.visualization.AreaChart(document.getElementById('tipoGastoPeriodeChart_div'));
+			        
+			        tipoGastoPeriodeChart.draw(data, options);
+			      }
+				}
+				
+				function changeYearMonth(data) {
+					if (data.status === 'begin') {
+				
+					}
+					if (data.status === 'complete') {
+				
+					}
+					if (data.status === 'success') {
+						
+						document.location = "dashboard.xhtml" ;
+				
+					}
+				} 
+				
+				
+				
+
+			</h:outputScript>
+
+			<h:outputStylesheet>
+
+			</h:outputStylesheet>
+
+
+
+		</div>
+	</ui:define>
+
+	<ui:define name="footer">
+
+	</ui:define>
+</ui:composition>
+</html>

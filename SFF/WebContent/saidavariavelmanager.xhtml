@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+<ui:composition template="WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="header">
+		<h2 id="headertitle">Saida Variavel</h2>
+	</ui:define>
+	<ui:define name="content">
+
+		<div id="managercontent">
+			<h:panelGrid columns="1" class="managergrid">
+
+				<h:panelGroup>
+					<h:outputLabel value="ID:" for="txtID" class="managerlabel" />
+					<h:inputText id="txtID"
+						value="#{saidaVariavelManager.saidaVariavel.id}"
+						class="ui-autocomplete-input"
+						style="width:40px;margin-right:20px;">
+					</h:inputText>
+					<h:outputLabel value="Data Lançamento: " for="txtDataLancamento"
+						class="managerlabel" />
+					<h:inputText id="txtDataLancamento" disabled="true"
+						value="#{saidaVariavelManager.saidaVariavel.dataLancamento}"
+						style="width:70px">
+						<f:converter converterId="javax.faces.DateTime" />
+					</h:inputText>
+
+					<h:outputLabel value="Situação: " for="ddlStatus"
+						class="managerlabel" style="margin-left:63px;" />
+					<h:selectOneMenu id="ddlStatus"
+						value="#{saidaVariavelManager.saidaVariavel.status}"
+						disabled="true" style="margin-right:20px; width:110px;">
+						<f:selectItems value="#{saidaVariavelManager.status}" var="status"
+							itemValue="#{status}" itemLabel="#{status.label}" />
+					</h:selectOneMenu>
+
+
+				</h:panelGroup>
+
+				<h:panelGroup id="diaGroup">
+					<h:outputLabel value="Tipo Dia: " for="ddlTipoDia"
+						class="managerlabel" />
+					<h:selectOneMenu id="ddlTipoDia"
+						value="#{saidaVariavelManager.selectedTipoDia}"
+						style="margin-right:20px;">
+						<f:selectItems value="#{saidaVariavelManager.tiposDia}"
+							var="tipoDia" itemValue="#{tipoDia}" itemLabel="#{tipoDia.label}" />
+						<f:ajax event="change" execute="@this" render="diaGroup"
+							listener="#{saidaVariavelManager.onTipoDiaChange}" />
+					</h:selectOneMenu>
+					<h:outputLabel value="Dia: " for="txtDia" class="managerlabel"
+						rendered="#{saidaVariavelManager.selectedTipoDia.label != 'Dia Semana'}" />
+					<h:inputText id="txtDia" required="true"
+						rendered="#{saidaVariavelManager.selectedTipoDia.label != 'Dia Semana'}"
+						class="ui-autocomplete-input date integerfield"
+						requiredMessage="* O campo 'Dia' é obrigatório"
+						value="#{saidaVariavelManager.saidaVariavel.valorDia}"
+						validatorMessage="* O campo 'Dia' deve ser estar entre os valores de 1 a 31"
+						style="margin-right:20px;width:76px;" maxlength="2">
+
+						<f:convertNumber locale="pt_BR" maxFractionDigits="2"
+							minFractionDigits="0" />
+						<f:validateDoubleRange minimum="1" maximum="31" />
+					</h:inputText>
+
+					<h:outputLabel value="Dia: " for="ddlDia" class="managerlabel"
+						rendered="#{saidaVariavelManager.selectedTipoDia.label == 'Dia Semana'}" />
+					<h:selectOneMenu id="ddlDia"
+						value="#{saidaVariavelManager.saidaVariavel.valorDia}"
+						rendered="#{saidaVariavelManager.selectedTipoDia.label == 'Dia Semana'}"
+						style="margin-right:20px;">
+						<f:selectItem itemLabel="Segunda" itemValue="2" />
+						<f:selectItem itemLabel="Terça" itemValue="3" />
+						<f:selectItem itemLabel="Quarta" itemValue="4" />
+						<f:selectItem itemLabel="Quinta" itemValue="5" />
+						<f:selectItem itemLabel="Sexta" itemValue="6" />
+						<f:selectItem itemLabel="Sabado" itemValue="7" />
+						<f:selectItem itemLabel="Domingo" itemValue="1" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="Ocorrencia: " for="ddlOcorrencia"
+						class="managerlabel" />
+					<h:selectOneMenu id="ddlOcorrencia"
+						value="#{saidaVariavelManager.saidaVariavel.ocorrencia}"
+						disabled="#{saidaVariavelManager.selectedTipoDia.label != 'Dia Semana'}">
+						<f:selectItem itemLabel="Nenhum" itemValue="0"
+							itemDisabled="#{saidaVariavelManager.selectedTipoDia.label == 'Dia Semana'}" />
+						<f:selectItem itemLabel="1º Ocorrencia" itemValue="1" />
+						<f:selectItem itemLabel="2º Ocorrencia" itemValue="2" />
+						<f:selectItem itemLabel="3º Ocorrencia" itemValue="3" />
+						<f:selectItem itemLabel="4º Ocorrencia" itemValue="4" />
+						<f:selectItem itemLabel="5º Ocorrencia" itemValue="5" />
+					</h:selectOneMenu>
+
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="Parcela: " for="txtParcela"
+						class="managerlabel" />
+					<h:inputText id="txtParcelaPagas" disabled="true"
+						class="ui-autocomplete-input date integerfield"
+						value="#{saidaVariavelManager.saidaVariavel.parcelasPagas}"
+						style="margin-right:5px;width:30px;" maxlength="3">
+						<f:convertNumber locale="pt_BR" maxFractionDigits="0"
+							minFractionDigits="0" />
+					</h:inputText>
+					<h:outputLabel value="/ " class="managerlabel" />
+
+					<h:inputText id="txtParcela" required="true"
+						class="ui-autocomplete-input date integerfield"
+						requiredMessage="* O campo 'Parcela' é obrigatório"
+						value="#{saidaVariavelManager.saidaVariavel.parcelas}"
+						validatorMessage="* O campo 'Parcela' deve ser estar entre os valores de 1 a 100"
+						style="margin-right:20px;width:30px;" maxlength="3">
+						<f:convertNumber locale="pt_BR" maxFractionDigits="0"
+							minFractionDigits="0" />
+						<f:validateDoubleRange minimum="1" maximum="100" />
+						<f:ajax event="blur" execute="valueGroup txtParcela"
+							render="txtValorTotal txtValorRestante"
+							listener="#{saidaVariavelManager.calcValues}" />
+					</h:inputText>
+
+					<h:outputLabel value="Mês: " for="txtMes" class="managerlabel" />
+					<h:inputText id="txtMes" required="true"
+						class="ui-autocomplete-input date integerfield"
+						requiredMessage="* O campo 'Mês' é obrigatório"
+						value="#{saidaVariavelManager.saidaVariavel.mes}"
+						validatorMessage="* O campo 'Mês' deve ser estar entre os valores de 1 a 12"
+						style="margin-right:18px;width:40px;" maxlength="2">
+						<f:convertNumber locale="pt_BR" maxFractionDigits="0"
+							minFractionDigits="0" />
+						<f:validateDoubleRange minimum="1" maximum="12" />
+					</h:inputText>
+
+					<h:outputLabel value="Ano: " for="txtAno" class="managerlabel" />
+					<h:inputText id="txtAno" required="true"
+						class="ui-autocomplete-input date valuelong"
+						requiredMessage="* O campo 'Ano' é obrigatório"
+						value="#{saidaVariavelManager.saidaVariavel.ano}"
+						style="margin-right:20px;width:40px;" maxlength="5">
+						<f:convertNumber locale="pt_BR" maxFractionDigits="0"
+							minFractionDigits="0" />
+						<f:validateDoubleRange minimum="1999" maximum="9999" />
+					</h:inputText>
+
+					<h:outputLabel value="Data Compra " for="txtDataCompra"
+						class="managerlabel" />
+					<h:inputText id="txtDataCompra" class="datefield"
+						value="#{saidaVariavelManager.saidaVariavel.dataCompra}"
+						style="width:70px">
+						<f:converter converterId="javax.faces.DateTime" />
+					</h:inputText>
+				</h:panelGroup>
+
+
+
+
+				<h:panelGroup id="valueGroup">
+					<h:outputLabel value="Valor: " for="txtValor" class="managerlabel" />
+					<h:inputText id="txtValor" required="true"
+						class="ui-autocomplete-input date valuefield"
+						requiredMessage="* O campo 'Valor' é obrigatório"
+						value="#{saidaVariavelManager.saidaVariavel.valor}"
+						validatorMessage="* O campo 'Valor' deve se superior a zero"
+						style="width:70px;">
+
+						<f:convertNumber locale="pt_BR" maxFractionDigits="2"
+							minFractionDigits="2" />
+						<f:validateDoubleRange minimum="0.01" />
+						<f:ajax event="blur" execute="valueGroup txtParcela"
+							render="txtValorTotal txtValorRestante"
+							listener="#{saidaVariavelManager.calcValues}" />
+					</h:inputText>
+
+					<h:outputLabel value="Valor Total: " for="txtValorTotal"
+						class="managerlabel" />
+					<h:inputText id="txtValorTotal" required="false" disabled="true"
+						class="ui-autocomplete-input date valuefield"
+						value="#{saidaVariavelManager.saidaVariavel.valorTotal}"
+						style="width:70px;">
+						<f:convertNumber locale="pt_BR" maxFractionDigits="2"
+							minFractionDigits="2" />
+					</h:inputText>	
+					
+					<h:outputLabel value="Valor Total Restante: " for="txtValorRestante"
+						class="managerlabel" />
+					<h:inputText id="txtValorRestante" required="false" disabled="true"
+						class="ui-autocomplete-input date valuefield"
+						value="#{saidaVariavelManager.saidaVariavel.valorTotalRestante}"
+						style="width:60px;">
+						<f:convertNumber locale="pt_BR" maxFractionDigits="2"
+							minFractionDigits="2" />
+					</h:inputText>	
+					
+				</h:panelGroup>
+				
+				<h:panelGroup>
+				
+				<h:outputLabel value="Tipo Gasto: " for="ddlTipoGasto"
+						class="managerlabel" />
+					<h:selectOneMenu disabled="false" style="width:128px;"
+						value="#{saidaVariavelManager.selectTipoGastoId}"
+						id="ddlTipoGasto">
+						<f:selectItems value="#{saidaVariavelManager.tiposGasto}" var="tg"
+							itemValue="#{tg.id}" itemLabel="#{tg.descricao}" />
+
+					</h:selectOneMenu>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="Descrição: " for="txtSaidaVariavel"
+						class="managerlabel" />
+					<h:inputText id="txtSaidaVariavel" required="true"
+						class="ui-autocomplete-input"
+						requiredMessage="* O campo 'Saida Variavel' é obrigatório"
+						value="#{saidaVariavelManager.saidaVariavel.descricao}"
+						style="width:442px">
+					</h:inputText>
+				</h:panelGroup>
+
+
+
+				<h:panelGroup>
+					<h:commandButton value="Salvar" id="btnSave"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+						<f:ajax event="click" execute="@form" render="@form"
+							listener="#{saidaVariavelManager.saveSaidaVariavel}"
+							onevent="validateSaidaVariavelManager" />
+					</h:commandButton>
+
+					<h:commandButton value="Cancelar" id="btnCancel"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+						<f:ajax event="click" render="@none" />
+					</h:commandButton>
+
+				</h:panelGroup>
+
+
+				<h:messages id="errorMessage" class="error_message" />
+
+
+				<h:outputScript>loadJQuerySaidaVariavelManager();</h:outputScript>
+
+			</h:panelGrid>
+		</div>
+
+		<h:outputScript target="head" library="js"
+			name="saidavariavelmanager.js" />
+		<h:outputStylesheet>
+
+		</h:outputStylesheet>
+
+
+	</ui:define>
+
+
+
+	<ui:define name="footer">
+
+	</ui:define>
+</ui:composition>
+</html>

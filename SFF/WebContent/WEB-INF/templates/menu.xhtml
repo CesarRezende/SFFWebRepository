@@ -1,0 +1,128 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+	<div id="content">
+		<h:form id="mainform">
+			<table style="padding: 0 0 0 0;">
+				<tr>
+					<td valign="top">
+						<div id="menu">
+
+							<script type="text/javascript">
+								$(document)
+										.ready(
+												function() {
+													$("#datepicker")
+															.datepicker(
+																	$.datepicker.regional["pt-BR"]);
+
+												});
+							</script>
+
+							<div id="menu">
+								<nav>
+									<h2>
+										<i class="fa fa-reorder"></i>Menu
+									</h2>
+									<ul>
+										<li><a href="dashboard.xhtml"><i
+												class="fa fa-tachometer"></i>DashBoard</a></li>
+										<li><a href="#"><i class="fa fa-money"></i>Entradas</a>
+											<h2>
+												<i class="fa fa-money"></i>Entradas
+											</h2>
+											<ul>
+												<li><a href="entradafixalist.xhtml"><i
+														class="fa fa-money"></i>Entradas Fixas</a></li>
+												<li><a href="entradavariavellist.xhtml"><i
+														class="fa fa-money"></i>Entradas Variaveis</a></li>
+											</ul></li>
+										<li><a href="#"><i class="fa fa-paper-plane"></i>Saídas</a>
+											<h2>
+												<i class="fa fa-money"></i>Saídas
+											</h2>
+											<ul>
+												<li><a href="saidafixalist.xhtml"><i
+														class="fa fa-paper-plane"></i>Saídas Fixas</a></li>
+												<li><a href="saidavariavellist.xhtml"><i
+														class="fa fa-paper-plane"></i>Saídas Variaveis</a></li>
+											</ul></li>
+
+										<li><a href="#"><i class="fa fa-briefcase"></i>Cadastros</a>
+											<h2>
+												<i class="fa fa-money"></i>Cadastros
+											</h2>
+											<ul>
+												<li><a href="tipogasto.xhtml"><i
+														class="fa fa-briefcase"></i>Tipo de Gasto</a></li>
+												<li><a href="#"><i class="fa fa-briefcase"></i>Portador</a></li>
+												<li><a href="familialist.xhtml"><i
+														class="fa fa-user"></i>Familia</a></li>
+											</ul></li>
+										<li><a href="movimentacaofinanceiralist.xhtml"><i
+												class="fa fa-book"></i>Movientação Financeira</a></li>
+										<li><a href="usuariolist.xhtml"><i class="fa fa-user"></i>Usuários</a></li>
+										<li><h:commandLink action="#{loginBean.sair}">Sair</h:commandLink>
+
+										</li>
+										<div id="datepicker"
+											style="margin-top: 0px; margin-left: 10px; z-index: 10" />
+
+									</ul>
+								</nav>
+							</div>
+
+
+
+
+						</div>
+					</td>
+					<td valign="top"><ui:insert name="content">
+
+						</ui:insert></td>
+				</tr>
+			</table>
+		</h:form>
+		<h:outputScript target="head">
+		    $(document).ready(function(){
+		        $('#menu').multilevelpushmenu(
+		        {
+		        	collapsed: true
+		        	,menuHeight: 0
+		        	,menuWidth: 220
+		        	,backText: 'Voltar'
+		        	,onGroupItemClick: function(){ 
+		        	
+		        	$('#datepicker').css("display","none");
+		        	
+		        	
+		        	}
+		        	,onBackItemClick: function(){ 
+		        	
+		
+		        	
+		        	$('#datepicker').css("display","block");
+		        	
+		        	
+		        	}
+		        	,onItemClick:function(){ 
+		        	
+						var itemHref = $item.find( 'a:first' ).attr( 'href' );
+				        // Redirecting the page
+				        location.href = itemHref;
+		        	}
+		        }
+		        
+		
+		        );
+		    });
+		</h:outputScript>
+
+	</div>
+
+</ui:composition>
+
+

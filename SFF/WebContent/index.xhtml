@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="WEB-INF/templates/logintemplate.xhtml">
+
+	<ui:define name="header">
+		<h2 id="headertitle">SSF</h2>
+	</ui:define>
+	<ui:define name="content">
+
+		<div id="sisdescrarea">
+			<div id="sisdescrbox">
+				<h1 id="descrtitle">Sistema Financeiro Familiar</h1>
+				<p id="sisdescr">Bem Vindo ao Sistema Financeiro Familiar, aqui
+					você poderá finalmente controlar todos os seus gastos de uma
+					maneira rapida e segura de onde você estiver. Você contará com
+					varios relatório e gráficos que lhe darão a visão nesséssaria para
+					gerenciar o seu dinheiro com maior eficiencia e controle.</p>
+			</div>
+
+		</div>
+		<div id="loginarea">
+			<div id="loginbox">
+				<h:form>
+					<div id="logintitlebox">
+						<h:outputLabel value="Login" class="loginboxtitle" />
+					</div>
+					<div id="logininputbox">
+						<h:outputLabel value="Usuario:" for="txt_usuario"
+							class="loginlabel" />
+						<h:inputText id="txt_usuario" title="Insira o seu Nome" validatorMessage="*Nome do Usuario deve conter de 3 a 30 caracteres"
+							class="logininputtxt" value="#{loginBean.usuario}" required="true" requiredMessage="*Campo Usuario é obrigatório">
+							<f:validateLength minimum="3" maximum="60" for="txt_usuario" />
+						</h:inputText>
+						<h:message for="txt_usuario" class="login_error_message"/>
+						<h:outputLabel value="Senha:" for="txt_senha" class="loginlabel" />
+						<h:inputSecret id="txt_senha" title="Insira a sua  Senha" required="true" requiredMessage="*Campo Senha é obrigatório"
+							class="logininputtxt" value="#{loginBean.senha}"  validatorMessage="*Senha do Usuario deve conter de 6 a 30 caracteres">
+							<f:validateLength minimum="6" maximum="30" for="txt_senha" />
+						</h:inputSecret>
+						<h:message for="txt_senha" class="login_error_message"/>
+						<h:commandButton value="Login" class="loginbutton"
+							action="#{loginBean.entrar}" />
+							
+					</div>
+
+				</h:form>
+			</div>
+		</div>
+
+	</ui:define>
+	<ui:define name="footer">
+		<h3 id="footertext">Desenvolvido por César Rezende</h3>
+	</ui:define>
+</ui:composition>
+</html>

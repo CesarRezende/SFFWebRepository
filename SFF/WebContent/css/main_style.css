@@ -1,0 +1,263 @@
+body {
+	font-size: 10px;
+	margin: 0px 0px 0px 0px;
+	background: #FFFFFF;
+	min-width: 1200px;
+}
+.managerlabel{
+	font: 14px  sans-serif;
+	font-weight: bold;
+}
+.managergrid>tbody>tr>td{
+	padding: 15px 5px 0px 5px;
+}
+.ui-button{
+	margin-right: 20px;
+}
+.ui-autocomplete-input{
+	margin-right: 20px;
+	
+}
+.creditrow{
+	color: blue;
+}
+.debitrow{
+	color: red;
+}
+
+.datefield{
+	width:70px;
+	margin-right:20px;
+}
+.valuefield{
+	width:70px;
+}
+
+.error_message{
+	font-size: 13px;
+	font-weight: bold;
+	color: darkred;
+}
+.login_error_message{
+	font-size: 14px;
+	font-weight: bold;
+	color: #CF0000;
+	margin-left: 30px;
+
+}
+#header {
+	min-width: 900px;
+	height: 40px;
+	margin-top: 0px;
+	margin-bottom: auto;
+	width: 99.8%;
+	border: solid black 1px;
+	min-height: 20px background:  rgb(192, 199, 226); /* Old browsers */
+	background: -moz-linear-gradient(left, rgba(192, 199, 226, 1) 0%,
+		rgba(150, 162, 208, 1) 17%, rgba(109, 125, 189, 1) 33%,
+		rgba(0, 39, 194, 1) 67%, rgba(0, 30, 152, 1) 83%, rgba(0, 22, 108, 1)
+		100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%, rgba(192,
+		199, 226, 1)), color-stop(17%, rgba(150, 162, 208, 1)),
+		color-stop(33%, rgba(109, 125, 189, 1)),
+		color-stop(67%, rgba(0, 39, 194, 1)),
+		color-stop(83%, rgba(0, 30, 152, 1)),
+		color-stop(100%, rgba(0, 22, 108, 1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left, rgba(192, 199, 226, 1) 0%,
+		rgba(150, 162, 208, 1) 17%, rgba(109, 125, 189, 1) 33%,
+		rgba(0, 39, 194, 1) 67%, rgba(0, 30, 152, 1) 83%, rgba(0, 22, 108, 1)
+		100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left, rgba(192, 199, 226, 1) 0%,
+		rgba(150, 162, 208, 1) 17%, rgba(109, 125, 189, 1) 33%,
+		rgba(0, 39, 194, 1) 67%, rgba(0, 30, 152, 1) 83%, rgba(0, 22, 108, 1)
+		100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left, rgba(192, 199, 226, 1) 0%,
+		rgba(150, 162, 208, 1) 17%, rgba(109, 125, 189, 1) 33%,
+		rgba(0, 39, 194, 1) 67%, rgba(0, 30, 152, 1) 83%, rgba(0, 22, 108, 1)
+		100%); /* IE10+ */
+	background: linear-gradient(to right, rgba(192, 199, 226, 1) 0%,
+		rgba(150, 162, 208, 1) 17%, rgba(109, 125, 189, 1) 33%,
+		rgba(0, 39, 194, 1) 67%, rgba(0, 30, 152, 1) 83%, rgba(0, 22, 108, 1)
+		100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#c0c7e2',
+		endColorstr='#00166c', GradientType=1); /* IE6-9 */
+}
+
+#content {
+	min-height : 536px;
+	min-width: 900px;
+	background-color: #FFFFFF;
+	
+}
+
+#indexcontent {
+	height: 500px;
+	min-width: 900px;
+	background-color: #FFFFFF;
+}
+#menu_multilevelpushmenu{
+	min-height: 625px;
+}
+
+#maincontent {
+	z-index: 1; 
+	position:absolute;
+	margin-left: 100px;
+	background-color: #FFFFFF;
+	height: 500px;
+	float: right;
+	width: 1000px;
+	padding: 0 0 0 0;
+}
+#managercontent{
+	margin-left: 30px;
+	
+}
+.table-title{
+	font-size:14px;
+}
+
+.dataTable {
+	font-size: 12px;
+}
+
+.dataTable>thead>tr>th{
+	text-align: left;
+} 
+
+.dataTables_length, .dataTables_info, .dataTables_paginate{
+	font-size:15px;
+	
+}
+.grid_icon{
+	height:21px;	
+	width:20px;
+}
+
+#menu {
+	
+}
+
+table {
+	border-collapse: collapse;
+}
+
+td {
+	padding: 0 0 0 0;
+}
+
+#middle {
+	
+}
+
+#footer {
+	height: auto;
+	margin-top: 0px;
+	margin-bottom: auto;
+	width: 100%;
+	border-top: solid gray 1px;
+	min-height: 20px
+}
+
+#footertext {
+	font-size: 11px;
+}
+
+#headertitle {
+	margin-left: 20px;
+	margin-top: 5px;
+	margin-bottom: auto;
+	color: #CF0000;
+	font-size: 22px;
+}
+
+#loginarea {
+	width: 40%;
+	height: 100%;
+	min-width: 350px;
+	min-height: 300px;
+	float: left;
+}
+
+#loginbox {
+	border: 3px solid #FFFFFF;
+	outline: 1px solid grey;
+	padding: 4px 4px 4px 4px;
+	background-image: url("../imagens/sucesso-financeiro.jpg");
+	background-repeat: no-repeat;
+	width: 350px;
+	height: 292px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 50px;
+}
+
+#sisdescrarea {
+	width: 59%;
+	height: 100%;
+	float: left;
+}
+
+#sisdescrbox {
+	margin-top: 130px;
+	margin-left: 30px;
+}
+
+#sisdescr {
+	text-align: justify;
+	font-size: 15px;
+}
+
+.loginlabel {
+	margin-top: 5px;
+	margin-left: 20px;
+	display: block;
+	font-size: 25px;
+	color: #E6E6E6;
+	font-family: Arial;
+}
+
+.logininputtxt {
+	margin-left: 20px;
+	display: block;
+	width: 300px;
+	height: 26px;
+	border-radius: 40px;
+	border-style: none;
+	padding-left: 20px;
+	font-size: 20px;
+}
+
+.loginbutton {
+	margin-top: 10px;
+	margin-left: 20px;
+	display: block;
+	border-radius: 5px;
+	border-style: groove;
+	font-family: Arial;
+	width: 50px;
+	height: 32px;
+}
+
+.loginboxtitle {
+	display: inline-block;
+	margin-top: 5px;
+	margin-left: 20px;
+	display: block;
+	font-size: 25px;
+	color: #E6E6E6;
+	font-family: Arial;
+}
+
+#logininputbox {
+	margin-top: 40px;
+}
+
+#logintitlebox {
+	border-bottom: 1px solid #E6E6E6;
+}
+
+#descrtitle {
+	font-size: 25px;
+	color: #CF0000;
+}

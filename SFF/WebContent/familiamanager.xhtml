@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+<ui:composition template="WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="header">
+		<h2 id="headertitle">Familia</h2>
+	</ui:define>
+	<ui:define name="content">
+
+		<div id="managercontent">
+			<h:panelGrid columns="1" class="managergrid">
+
+				<h:panelGroup>
+					<h:outputLabel value="ID:" for="txtID" class="managerlabel" />
+					<h:inputText id="txtID" value="#{familiaManager.familia.id}"
+						class="ui-autocomplete-input" style="width:40px;">
+					</h:inputText>
+
+					<h:outputLabel value="Familia:" for="txtFamilia"
+						class="managerlabel" />
+					<h:inputText id="txtFamilia" required="true"
+						class="ui-autocomplete-input"
+						requiredMessage="* O campo 'Familia' é obrigatório"
+						value="#{familiaManager.familia.descricao}">
+					</h:inputText>
+
+				</h:panelGroup>
+
+				<c:if test="#{familiaManager.usuario.administrator}">
+					<h:panelGroup>
+						<h:selectBooleanCheckbox id="chkDesativado"
+							value="#{familiaManager.familia.desativado}" />
+						<h:outputLabel value="Desativado" for="chkDesativado"
+							class="managerlabel" />
+						<h:message for="txtFamilia" class="error_message" />
+					</h:panelGroup>
+				</c:if>
+
+				<h:panelGroup>
+					<h:commandButton value="Salvar" id="btnSave"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+						<f:ajax event="click" execute="@form" render="@form"
+							listener="#{familiaManager.saveFamilia}"
+							onevent="validateFamiliaManager" />
+					</h:commandButton>
+
+					<h:commandButton value="Cancelar" id="btnCancel"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+						<f:ajax event="click" render="@none" />
+					</h:commandButton>
+				</h:panelGroup>
+
+				<h:message for="txtFamilia" class="error_message" />
+
+
+				<h:outputScript>loadJQueryFamiliaManager();</h:outputScript>
+
+			</h:panelGrid>
+		</div>
+
+		<h:outputScript target="head" library="js" name="familiamanager.js" />
+		<h:outputStylesheet>
+
+		</h:outputStylesheet>
+
+
+	</ui:define>
+
+
+
+	<ui:define name="footer">
+
+	</ui:define>
+</ui:composition>
+</html>
